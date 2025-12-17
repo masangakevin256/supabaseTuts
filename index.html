@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Methods Tutorial</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --supabase-green: #3ecf8e;
+            --supabase-dark: #1f2937;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        .navbar-brand {
+            color: var(--supabase-green) !important;
+            font-weight: 700;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            bottom: 0;
+            width: 280px;
+            background: white;
+            border-right: 1px solid #dee2e6;
+            overflow-y: auto;
+            padding-top: 20px;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            padding: 20px;
+        }
+        
+        .method-card {
+            border-left: 4px solid var(--supabase-green);
+            transition: transform 0.2s;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .keyword {
+            color: #569cd6;
+        }
+        
+        .function {
+            color: #dcdcaa;
+        }
+        
+        .string {
+            color: #ce9178;
+        }
+        
+        .method-tag {
+            background-color: var(--supabase-green);
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-database-fill"></i> Supabase Methods Tutorial
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#getting-started">Getting Started</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#methods">Methods</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#examples">Examples</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar d-none d-lg-block">
+        <div class="px-3">
+            <h6 class="text-muted mb-3">SUPABASE METHODS</h6>
+            <div class="list-group list-group-flush">
+                <a href="#client-init" class="list-group-item list-group-item-action">
+                    <i class="bi bi-plug me-2"></i>Client Initialization
+                </a>
+                <a href="#select" class="list-group-item list-group-item-action">
+                    <i class="bi bi-search me-2"></i>Select Method
+                </a>
+                <a href="#insert" class="list-group-item list-group-item-action">
+                    <i class="bi bi-plus-circle me-2"></i>Insert Method
+                </a>
+                <a href="#update" class="list-group-item list-group-item-action">
+                    <i class="bi bi-pencil-square me-2"></i>Update Method
+                </a>
+                <a href="#delete" class="list-group-item list-group-item-action">
+                    <i class="bi bi-trash me-2"></i>Delete Method
+                </a>
+                <a href="#filtering" class="list-group-item list-group-item-action">
+                    <i class="bi bi-funnel me-2"></i>Filtering Methods
+                </a>
+                <a href="#ordering" class="list-group-item list-group-item-action">
+                    <i class="bi bi-sort-alpha-down me-2"></i>Order Method
+                </a>
+            </div>
+            
+            <h6 class="text-muted mt-4 mb-3">CRUD OPERATIONS</h6>
+            <div class="list-group list-group-flush">
+                <a href="#full-example" class="list-group-item list-group-item-action">
+                    <i class="bi bi-code-slash me-2"></i>Full CRUD Example
+                </a>
+                <a href="#live-demo" class="list-group-item list-group-item-action">
+                    <i class="bi bi-play-circle me-2"></i>Live Demo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Hero Section -->
+        <div class="jumbotron bg-light p-5 rounded-3 mb-5" id="getting-started">
+            <h1 class="display-4">Supabase Client Methods Tutorial</h1>
+            <p class="lead">Learn how to use Supabase JavaScript client methods for database operations.</p>
+            <hr class="my-4">
+            <p>This tutorial covers all the Supabase methods for database operations.</p>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <span class="badge bg-success">SELECT</span>
+                <span class="badge bg-primary">INSERT</span>
+                <span class="badge bg-warning">UPDATE</span>
+                <span class="badge bg-danger">DELETE</span>
+                <span class="badge bg-info">FILTER</span>
+                <span class="badge bg-secondary">ORDER</span>
+            </div>
+        </div>
+
+        <!-- Methods Section -->
+        <div id="methods">
+            <h2 class="mb-4">Supabase Methods</h2>
+            
+            <!-- Client Initialization -->
+            <div class="card method-card mb-4" id="client-init">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Client Initialization</h5>
+                    <span class="method-tag">createClient()</span>
+                </div>
+                <div class="card-body">
+                    <p>Initialize the Supabase client with your project URL and anon key.</p>
+                    <div class="code-block">
+                        <span class="keyword">import</span> { createClient } <span class="keyword">from</span> <span class="string">'@supabase/supabase-js'</span><br><br>
+                        
+                        <span class="keyword">const</span> supabaseUrl = <span class="string">'YOUR_SUPABASE_URL'</span><br>
+                        <span class="keyword">const</span> supabaseKey = <span class="string">'YOUR_SUPABASE_ANON_KEY'</span><br><br>
+                        
+                        <span class="keyword">const</span> supabase = <span class="function">createClient</span>(supabaseUrl, supabaseKey)<br><br>
+                        
+                        <span class="keyword">export default</span> supabase;
+                    </div>
+                </div>
+            </div>
+
+            <!-- Select Method -->
+            <div class="card method-card mb-4" id="select">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Select Method</h5>
+                    <span class="method-tag">.select()</span>
+                </div>
+                <div class="card-body">
+                    <p>Fetch data from a table. Can be chained with other methods.</p>
+                    <div class="code-block">
+                        <span class="keyword">const</span> { data, error } = <span class="keyword">await</span> supabase<br>
+                        &nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                        &nbsp;&nbsp;.<span class="function">select</span>()<br>
+                        &nbsp;&nbsp;.<span class="function">order</span>(<span class="string">'created_at'</span>, { ascending: <span class="keyword">false</span> });<br><br>
+                        
+                        <span class="keyword">if</span> (error) <span class="keyword">throw</span> error;<br>
+                        <span class="keyword">return</span> data;
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insert Method -->
+            <div class="card method-card mb-4" id="insert">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Insert Method</h5>
+                    <span class="method-tag">.insert()</span>
+                </div>
+                <div class="card-body">
+                    <p>Insert new records into a table.</p>
+                    <div class="code-block">
+                        <span class="keyword">const</span> { data, error } = <span class="keyword">await</span> supabase<br>
+                        &nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                        &nbsp;&nbsp;.<span class="function">insert</span>([{<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;title: <span class="string">'Berry Blast'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;method: <span class="string">'Blend all ingredients'</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;rating: <span class="number">5</span><br>
+                        &nbsp;&nbsp;}]);<br><br>
+                        
+                        <span class="keyword">if</span> (error) <span class="keyword">throw</span> error;<br>
+                        console.<span class="function">log</span>(<span class="string">'Inserted:'</span>, data);
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Method -->
+            <div class="card method-card mb-4" id="update">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Update Method</h5>
+                    <span class="method-tag">.update()</span>
+                </div>
+                <div class="card-body">
+                    <p>Update existing records. Usually combined with .eq() to specify which record.</p>
+                    <div class="code-block">
+                        <span class="keyword">const</span> { data, error } = <span class="keyword">await</span> supabase<br>
+                        &nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                        &nbsp;&nbsp;.<span class="function">update</span>({ <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;rating: <span class="number">4</span>,<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;method: <span class="string">'Updated method description'</span><br>
+                        &nbsp;&nbsp;})<br>
+                        &nbsp;&nbsp;.<span class="function">eq</span>(<span class="string">'id'</span>, id)<br>
+                        &nbsp;&nbsp;.<span class="function">select</span>();<br><br>
+                        
+                        <span class="keyword">if</span> (error) <span class="keyword">throw</span> error;<br>
+                        <span class="keyword">return</span> data;
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Method -->
+            <div class="card method-card mb-4" id="delete">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Delete Method</h5>
+                    <span class="method-tag">.delete()</span>
+                </div>
+                <div class="card-body">
+                    <p>Delete records from a table. Always use with .eq() to avoid deleting all records!</p>
+                    <div class="code-block">
+                        <span class="keyword">const</span> { data, error } = <span class="keyword">await</span> supabase<br>
+                        &nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                        &nbsp;&nbsp;.<span class="function">delete</span>()<br>
+                        &nbsp;&nbsp;.<span class="function">eq</span>(<span class="string">'id'</span>, smoothieId);<br><br>
+                        
+                        <span class="keyword">if</span> (error) <span class="keyword">throw</span> error;<br>
+                        console.<span class="function">log</span>(<span class="string">'Deleted:'</span>, data);
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtering Methods -->
+            <div class="card method-card mb-4" id="filtering">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Filtering Methods</h5>
+                    <span class="method-tag">.eq() .single()</span>
+                </div>
+                <div class="card-body">
+                    <p>Filter results and fetch single records.</p>
+                    <div class="code-block">
+                        <span class="comment">// Filter by equality</span><br>
+                        <span class="keyword">const</span> { data, error } = <span class="keyword">await</span> supabase<br>
+                        &nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                        &nbsp;&nbsp;.<span class="function">select</span>()<br>
+                        &nbsp;&nbsp;.<span class="function">eq</span>(<span class="string">'id'</span>, id)<br>
+                        &nbsp;&nbsp;.<span class="function">single</span>(); <span class="comment">// Get single record</span><br><br>
+                        
+                        <span class="comment">// Other filtering methods available:</span><br>
+                        <span class="comment">// .neq(), .gt(), .lt(), .gte(), .lte()</span><br>
+                        <span class="comment">// .like(), .ilike(), .is(), .in()</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Method -->
+            <div class="card method-card mb-4" id="ordering">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Order Method</h5>
+                    <span class="method-tag">.order()</span>
+                </div>
+                <div class="card-body">
+                    <p>Sort results by a column in ascending or descending order.</p>
+                    <div class="code-block">
+                        <span class="comment">// Order by created_at descending</span><br>
+                        <span class="keyword">const</span> { data, error } = <span class="keyword">await</span> supabase<br>
+                        &nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                        &nbsp;&nbsp;.<span class="function">select</span>()<br>
+                        &nbsp;&nbsp;.<span class="function">order</span>(<span class="string">'created_at'</span>, { <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;ascending: <span class="keyword">false</span><br>
+                        &nbsp;&nbsp;});<br><br>
+                        
+                        <span class="comment">// Order by title ascending</span><br>
+                        <span class="keyword">const</span> { data: sortedData } = <span class="keyword">await</span> supabase<br>
+                        &nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                        &nbsp;&nbsp;.<span class="function">select</span>()<br>
+                        &nbsp;&nbsp;.<span class="function">order</span>(<span class="string">'title'</span>); <span class="comment">// ascending: true by default</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full CRUD Example -->
+        <div class="card method-card mb-5" id="full-example">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Complete CRUD Example</h5>
+            </div>
+            <div class="card-body">
+                <p>Here's a complete example showing all methods working together:</p>
+                <div class="code-block">
+                    <span class="comment">// 1. Initialize client</span><br>
+                    <span class="keyword">const</span> supabase = <span class="function">createClient</span>(url, key);<br><br>
+                    
+                    <span class="comment">// 2. CREATE - Insert new record</span><br>
+                    <span class="keyword">async function</span> <span class="function">createSmoothie</span>() {<br>
+                    &nbsp;&nbsp;<span class="keyword">const</span> { data } = <span class="keyword">await</span> supabase<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">insert</span>([{ title, method, rating }]);<br>
+                    &nbsp;&nbsp;<span class="keyword">return</span> data;<br>
+                    }<br><br>
+                    
+                    <span class="comment">// 3. READ - Fetch all records</span><br>
+                    <span class="keyword">async function</span> <span class="function">getSmoothies</span>() {<br>
+                    &nbsp;&nbsp;<span class="keyword">const</span> { data } = <span class="keyword">await</span> supabase<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">select</span>()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">order</span>(<span class="string">'created_at'</span>, { ascending: <span class="keyword">false</span> });<br>
+                    &nbsp;&nbsp;<span class="keyword">return</span> data;<br>
+                    }<br><br>
+                    
+                    <span class="comment">// 4. UPDATE - Update a record</span><br>
+                    <span class="keyword">async function</span> <span class="function">updateSmoothie</span>(id, updates) {<br>
+                    &nbsp;&nbsp;<span class="keyword">const</span> { data } = <span class="keyword">await</span> supabase<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">update</span>(updates)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">eq</span>(<span class="string">'id'</span>, id);<br>
+                    &nbsp;&nbsp;<span class="keyword">return</span> data;<br>
+                    }<br><br>
+                    
+                    <span class="comment">// 5. DELETE - Delete a record</span><br>
+                    <span class="keyword">async function</span> <span class="function">deleteSmoothie</span>(id) {<br>
+                    &nbsp;&nbsp;<span class="keyword">const</span> { data } = <span class="keyword">await</span> supabase<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">from</span>(<span class="string">'smoothies'</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">delete</span>()<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;.<span class="function">eq</span>(<span class="string">'id'</span>, id);<br>
+                    &nbsp;&nbsp;<span class="keyword">return</span> data;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Demo Section -->
+        <div class="card" id="live-demo">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-play-circle me-2"></i> Interactive Demo</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Try Supabase Methods</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Select Method</label>
+                            <select class="form-select" id="methodSelect">
+                                <option value="select">SELECT - Read data</option>
+                                <option value="insert">INSERT - Create data</option>
+                                <option value="update">UPDATE - Update data</option>
+                                <option value="delete">DELETE - Remove data</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Generated Code</label>
+                            <textarea class="form-control font-monospace" id="generatedCode" rows="6" readonly></textarea>
+                        </div>
+                        <button class="btn btn-success" onclick="copyCode()">
+                            <i class="bi bi-copy"></i> Copy Code
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Method Chaining Visualization</h6>
+                        <div class="bg-light p-3 rounded">
+                            <div class="d-flex flex-wrap align-items-center mb-3">
+                                <code class="bg-dark text-white p-2 rounded me-2">supabase</code>
+                                <i class="bi bi-arrow-right mx-2"></i>
+                                <code class="bg-dark text-white p-2 rounded me-2">.from('table')</code>
+                                <i class="bi bi-arrow-right mx-2"></i>
+                                <div id="methodChain"></div>
+                            </div>
+                            <p class="text-muted">Click on methods to see how they chain together.</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h6>Quick Reference</h6>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>Purpose</th>
+                                        <th>CRUD</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>.select()</code></td>
+                                        <td>Read data</td>
+                                        <td><span class="badge bg-info">READ</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>.insert()</code></td>
+                                        <td>Create data</td>
+                                        <td><span class="badge bg-success">CREATE</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>.update()</code></td>
+                                        <td>Update data</td>
+                                        <td><span class="badge bg-warning">UPDATE</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>.delete()</code></td>
+                                        <td>Delete data</td>
+                                        <td><span class="badge bg-danger">DELETE</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-5 pt-4 border-top">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Supabase Methods Tutorial</h6>
+                    <p class="text-muted">Learn how to use Supabase JavaScript client methods for database operations.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>Extracted Methods: 8</p>
+                    <p class="text-muted">Last Updated: Today</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Method examples
+        const methodExamples = {
+            select: `const { data, error } = await supabase
+  .from('smoothies')
+  .select()
+  .order('created_at', { ascending: false });
+
+if (error) throw error;
+console.log('Fetched data:', data);`,
+
+            insert: `const { data, error } = await supabase
+  .from('smoothies')
+  .insert([
+    {
+      title: 'Berry Blast',
+      method: 'Blend all berries with yogurt',
+      rating: 5
+    }
+  ]);
+
+if (error) throw error;
+console.log('Inserted:', data);`,
+
+            update: `const { data, error } = await supabase
+  .from('smoothies')
+  .update({ 
+    rating: 4,
+    method: 'Updated preparation method'
+  })
+  .eq('id', '12345')
+  .select();
+
+if (error) throw error;
+console.log('Updated:', data);`,
+
+            delete: `const { data, error } = await supabase
+  .from('smoothies')
+  .delete()
+  .eq('id', '12345');
+
+if (error) throw error;
+console.log('Deleted:', data);`
+        };
+
+        // Method chain visualization
+        const methodChains = {
+            select: `<code class="bg-dark text-white p-2 rounded me-2">.select()</code>
+<i class="bi bi-arrow-right mx-2"></i>
+<code class="bg-dark text-white p-2 rounded me-2">.order()</code>`,
+            
+            insert: `<code class="bg-dark text-white p-2 rounded me-2">.insert()</code>`,
+            
+            update: `<code class="bg-dark text-white p-2 rounded me-2">.update()</code>
+<i class="bi bi-arrow-right mx-2"></i>
+<code class="bg-dark text-white p-2 rounded me-2">.eq()</code>
+<i class="bi bi-arrow-right mx-2"></i>
+<code class="bg-dark text-white p-2 rounded">.select()</code>`,
+            
+            delete: `<code class="bg-dark text-white p-2 rounded me-2">.delete()</code>
+<i class="bi bi-arrow-right mx-2"></i>
+<code class="bg-dark text-white p-2 rounded">.eq()</code>`
+        };
+
+        // Initialize with default method
+        document.getElementById('methodSelect').addEventListener('change', function() {
+            const method = this.value;
+            document.getElementById('generatedCode').value = methodExamples[method];
+            document.getElementById('methodChain').innerHTML = methodChains[method];
+        });
+
+        // Set initial values
+        document.getElementById('generatedCode').value = methodExamples.select;
+        document.getElementById('methodChain').innerHTML = methodChains.select;
+
+        // Copy code function
+        function copyCode() {
+            const codeText = document.getElementById('generatedCode');
+            codeText.select();
+            codeText.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(codeText.value);
+            
+            // Show feedback
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+            btn.classList.add('btn-success');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
